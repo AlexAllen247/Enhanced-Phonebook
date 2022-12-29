@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
   deployment_pipeline:
@@ -17,3 +23,50 @@ jobs:
         run: npm install
       - name: npm lint
         run: npm run lint
+      - name: npm install
+        run: npm install && cd client && npm install && cd ..
+      - name: npm build:ui
+        run: npm run build:ui
+      - name: Cypress e2e test
+        uses: cypress-io/github-action@v4
+        env:
+          MONDODB_URI: ${{ secrets.MONGODB_URI }}
+          PORT: ${{ secrets.PORT }}
+        with:
+          command: npm run test:e2e
+          build: npm run build:ui
+          start: npm start
+          wait-on: http://localhost:3001
+
+deploy_fly:
+    if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && ( ! contains(join(toJSON(github.event.commits.*.message)), '#skip')) }}
+    needs: [deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: npm install
+        run: npm install && cd client && npm install && cd ..
+      - name: deploy Fly.io
+        run: flyctl deploy --remote-only
+
+tag_release:
+    if: github.event_name == 'push' && contains(join(github.event.commits.*.message, ', '), '#skip') == false
+    needs: [deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
