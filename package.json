@@ -1,5 +1,5 @@
 {
-  "name": "phonebook-backend-fullstackopen-2022",
+  "name": "Enhanced-Phonebook",
   "version": "1.0.0",
   "description": "This is the repository for part 3 of the Full Stack Open 2022 course.",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf build && cd ./frontend/ && npm run build && cp -r build ../backend",
+    "build:ui": "rm -rf build && cd ./frontend && DISABLE_ESLINT_PLUGIN=true && npm run build && cp -r build && cd ..",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
     "logs:prod": "fly logs",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlexAllen247/Phonebook-Backend-FullStackOpen-2022.git"
+    "url": "git+https://github.com/AlexAllen247/Enhanced-Phonebook.git"
   },
   "author": "AlexAllen247",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AlexAllen247/Phonebook-Backend-FullStackOpen-2022/issues"
+    "url": "https://github.com/AlexAllen247/Enhanced-Phonebook/issues"
   },
-  "homepage": "https://github.com/AlexAllen247/Phonebook-Backend-FullStackOpen-2022#readme",
+  "homepage": "https://github.com/AlexAllen247/Enhanced-Phonebook#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
