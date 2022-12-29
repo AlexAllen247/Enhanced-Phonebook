@@ -1,6 +1,6 @@
-# fly.toml file generated for crimson-waterfall-3888 on 2022-11-02T10:23:18+01:00
+# fly.toml file generated for autumn-sunset-3077 on 2022-12-29T13:06:13+01:00
 
-app = "crimson-waterfall-3888"
+app = "autumn-sunset-3077"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
