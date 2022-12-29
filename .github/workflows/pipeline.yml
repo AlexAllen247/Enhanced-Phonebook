@@ -17,5 +17,3 @@ jobs:
         run: npm install
       - name: npm lint
         run: npm run lint
-      - name: nodemon
-        run: npm run dev
