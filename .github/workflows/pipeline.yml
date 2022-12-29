@@ -38,7 +38,7 @@ jobs:
           start: npm start
           wait-on: http://localhost:3001
 
-deploy_fly:
+  deploy_fly:
     if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && ( ! contains(join(toJSON(github.event.commits.*.message)), '#skip')) }}
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
@@ -55,7 +55,7 @@ deploy_fly:
       - name: deploy Fly.io
         run: flyctl deploy --remote-only
 
-tag_release:
+  tag_release:
     if: github.event_name == 'push' && contains(join(github.event.commits.*.message, ', '), '#skip') == false
     needs: [deployment_pipeline]
     runs-on: ubuntu-20.04
